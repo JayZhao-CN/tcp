@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.tcp.dao.UeFriendMapper">
+
+
+    <select id="getFriends" parameterType="java.lang.String" resultType="com.example.tcp.pojo.UeUser">
+        select username, account
+        from ue_friend
+                 left join ue_user on account = user_account
+        where friend_account = #{account}
+        UNION
+        select username, account
+        from ue_friend
+                 left join ue_user on account = friend_account
+        where user_account = #{account}
+    </select>
+
+    <select id="findFriends" parameterType="java.lang.String" resultType="com.example.tcp.pojo.UeUser">
+        select account, username
+        from ue_user
+        where account like #{keyword}
+        or username like #{keyword}
+    </select>
+
+    <select id="myAdd" parameterType="java.lang.String" resultType="java.util.Map">
+        select friend_account account
+        from ue_friend
+        where user_account = #{account}
+    </select>
+
+    <select id="othersAdd" parameterType="java.lang.String" resultType="java.util.Map">
+        select user_account account
+        from ue_friend
+        where friend_account = #{account}
+    </select>
+</mapper>
